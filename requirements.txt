@@ -1,5 +1,6 @@
 pandas
 flask
+WTForms
 scikit-learn
 matplotlib
 seaborn
