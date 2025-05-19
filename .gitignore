@@ -1,5 +1,5 @@
 # Ignore .csv
-*.csv
+spotify_data.csv
 
 
 # Byte-compiled / optimized / DLL files
