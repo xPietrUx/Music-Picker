@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Music Picker</h1>
+    <h2>Wpisz swój ulubiony utwór by wyświetlić podobne</h2>
+    <form method='POST' action="{{ url_for('index') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.song.label }}<br>
+            {{ form.song(size=30) }}<br>
+        </p>
+        <p>
+            {{ form.artist.label }}<br>
+            {{ form.artist(size=30) }}<br>
+        </p>
+        <p><input type="submit" value="Szukaj"></p>
+    </form>
+</body>
+
+</html>
