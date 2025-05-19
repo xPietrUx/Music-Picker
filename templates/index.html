@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
-    <title>Document</title>
+    <title>Music Picker</title>
 </head>
 
 <body>
     <h1>Music Picker</h1>
-    <h2>Wpisz swój ulubiony utwór by wyświetlić podobne</h2>
-    <form method='POST' action="{{ url_for('index') }}">
+    <h2>Wpisz autora i utwór by zobaczyć spersonalizowane rekomendacje muzyczne!</h2>
+    <form class='form-pick' method='POST' action="">
         {{ form.hidden_tag() }}
         <p>
             {{ form.song.label }}<br>
@@ -21,8 +21,18 @@
             {{ form.artist.label }}<br>
             {{ form.artist(size=30) }}<br>
         </p>
-        <p><input type="submit" value="Szukaj"></p>
+        <p>
+            <input class='btn-submit' type="submit" value="Szukaj">
+        </p>
     </form>
+
+    {% if feedback_message %}
+    <div class="feedback-section">
+        <h2>Odpowiedź serwera:</h2>
+        <p>{{ feedback_message }}</p>
+    </div>
+    {% endif %}
+
 </body>
 
 </html>
