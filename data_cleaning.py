@@ -34,5 +34,5 @@ start_columns = [col for col in all_columns if col not in move_to_end]
 new_order = start_columns + move_to_end
 df = df[new_order]
 
-print(df.head())
-print(df.shape)
+# print(df.head())
+# print(df.shape)
