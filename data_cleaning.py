@@ -12,27 +12,16 @@ df.drop_duplicates(inplace=True)
 df.dropna(inplace=True)
 
 # Usunięcie kolumn niepotrzebnych do analizy
-df.drop(['track_id', 'mode', 'duration_ms', 'time_signature'], axis=1, inplace=True)
+df.drop(['Unnamed: 0','track_id', 'mode', 'duration_ms', 'time_signature'], axis=1, inplace=True)
 
 # Usunięcie piosenek, które mają popularność od 0 do 15
 df = df[~df['popularity'].between(0, 15)]
 
-# Standaryzacja wybranych kolumn
-features = ['popularity', 'loudness', 'tempo']
+# Skalowanie wszystkich cech numerycznych
+features_to_scale = ['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','loudness', 'tempo', 'popularity']
 scaler = StandardScaler()
-df_scaled = scaler.fit_transform(df[features])
-df_scaled = pd.DataFrame(df_scaled, columns=features, index=df.index)
+df[features_to_scale] = scaler.fit_transform(df[features_to_scale])
 
-# Połącz wystandaryzowane kolumny z resztą danych
-df_non_scaled = df.drop(columns=features)
-df = pd.concat([df_non_scaled, df_scaled], axis=1)
-
-# Przestawienie kolumn - 'popularity', 'loudness', 'tempo' na koniec
-move_to_end = ['popularity', 'loudness', 'tempo']
-all_columns = list(df.columns)
-start_columns = [col for col in all_columns if col not in move_to_end]
-new_order = start_columns + move_to_end
-df = df[new_order]
 
 # print(df.head())
 # print(df.shape)
