@@ -1,6 +1,9 @@
+from email import message
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, validators, IntegerField
+
+from recomender_system import search_engine
 
 
 # index.html
@@ -23,7 +26,11 @@ def index():
         artist_name = form.artist.data
         number_of_song = form.numberOfSongs.data
 
-        message_to_display = f"Otrzymano utwór: '{song_title}' artysty: '{artist_name}'. Rekomendacje pojawią się tutaj wkrótce!"
+        recommended_songs = search_engine.find_similar_songs(
+            song_title, artist_name, number_of_song
+        )
+
+        message_to_display = recommended_songs
 
         return render_template(
             "index.html", form=form, feedback_message=message_to_display
