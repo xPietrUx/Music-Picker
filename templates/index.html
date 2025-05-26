@@ -30,6 +30,11 @@
         </p>
     </form>
 
+    {% if average_distance is not none %}
+    <p class="average-distance-info">
+        📏 Średni dystans do potencjalnych rekomendacji: {{ "%.4f"|format(average_distance) }}
+    </p>
+    {% endif %}
     {% if feedback_message is defined and feedback_message is not none %}
     <div class="feedback-section">
         <h2>Rekomendowane utwory:</h2>

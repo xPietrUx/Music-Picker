@@ -20,23 +20,34 @@ app.config["SECRET_KEY"] = "dunno"
 @app.route("/", methods=["POST", "GET"])
 def index():
     form = SongForm()
+    feedback_message = None
+    average_distance = None
 
     if form.validate_on_submit():
         song_title = form.song.data
         artist_name = form.artist.data
         number_of_song = form.numberOfSongs.data
 
-        recommended_songs = search_engine.find_similar_songs(
+        recommended_songs_list, avg_dist = search_engine.find_similar_songs(
             song_title, artist_name, number_of_song
         )
 
-        message_to_display = recommended_songs
+        feedback_message = recommended_songs_list
+        average_distance = avg_dist
 
         return render_template(
-            "index.html", form=form, feedback_message=message_to_display
+            "index.html",
+            form=form,
+            feedback_message=feedback_message,
+            average_distance=average_distance,
         )
 
-    return render_template("index.html", form=form)
+    return render_template(
+        "index.html",
+        form=form,
+        feedback_message=feedback_message,
+        average_distance=average_distance,
+    )
 
 
 if __name__ == "__main__":
