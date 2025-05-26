@@ -7,7 +7,7 @@ from wtforms import StringField, validators, IntegerField
 class SongForm(FlaskForm):
     song = StringField("Utwór", [validators.Length(min=4, max=25)])
     artist = StringField("Artysta", validators=[validators.Length(min=4, max=25)])
-    numberOfSongs = IntegerField("Artysta")
+    numberOfSongs = IntegerField("Liczba podobnych utworów do wyświetlenia")
 
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ def index():
     if form.validate_on_submit():
         song_title = form.song.data
         artist_name = form.artist.data
-        number_of_song = form.number.data
+        number_of_song = form.numberOfSongs.data
 
         message_to_display = f"Otrzymano utwór: '{song_title}' artysty: '{artist_name}'. Rekomendacje pojawią się tutaj wkrótce!"
 
