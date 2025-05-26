@@ -35,11 +35,9 @@ def find_similar_songs(
         )  # Wyświetlanie komunikatu o braku danych w cechach
         return recommended_songs  # Zwracanie pustej listy rekomendacji
 
-    try:  # Rozpoczynanie bloku try-except do obsługi błędów
-        # Ustal k dla modelu KNN. Aby uzyskać 'numberOfSongs' rekomendacji,
-        # poproś model o 'numberOfSongs + 1' sąsiadów,
-        # aby uwzględnić możliwość, że piosenka wejściowa jest jednym z nich.
-        k_for_model = numberOfSongs + 1  # Ustalanie liczby sąsiadów dla modelu KNN
+    try:
+        # Ustalanie liczby sąsiadów dla modelu KNN
+        k_for_model = numberOfSongs + 1
 
         # Załaduj/pobierz model KNN z określoną wartością k
         knn_model = KNN.load_knn_model(
@@ -82,8 +80,11 @@ def find_similar_songs(
             print(
                 f"- {song['track_name']} by {song['artist_name']}"
             )  # Wyświetlanie każdego rekomendowanego utworu
-        # Usunięto odwołanie do KNN.k i KNN.avg_distance, ponieważ nie są już globalne
-        # print(f"\n📏 Średni dystans do {KNN.k} sąsiadów: {KNN.avg_distance:.4f}")
+        if distances.size > 0:
+            avg_dist_for_query = distances[0].mean()
+            print(
+                f"\n📏 Średni dystans do {numberOfSongs} potencjalnych rekomendacji (przed odfiltrowaniem utworu wejściowego): {avg_dist_for_query:.4f}"
+            )
 
     except Exception as e:  # Obsługiwanie wyjątków
         print(
