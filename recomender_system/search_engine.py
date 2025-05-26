@@ -1,55 +1,93 @@
-import recomender_system.data_cleaning as dc
-import recomender_system.KNN as KNN
+import recomender_system.data_cleaning as dc  # Importowanie modułu do czyszczenia danych
+import recomender_system.KNN as KNN  # Importowanie modułu KNN
 
 
-def find_similar_songs(title, artist):
-    print(f"Szukam podobnych utworów do: {title} wykonawcy: {artist}")
+def find_similar_songs(
+    title, artist, numberOfSongs
+):  # Definiowanie funkcji do wyszukiwania podobnych utworów
+    print(  # Wyświetlanie informacji o rozpoczęciu wyszukiwania
+        f"Szukam podobnych utworów do: {title} wykonawcy: {artist} (liczba rekomendacji: {numberOfSongs})"
+    )
 
     # Lista zwracająca podobne utwory
-    recommended_songs = []
+    recommended_songs = []  # Inicjalizowanie listy na rekomendowane utwory
 
     # Znajdź wiersz w df
-    song_row_full = dc.df[
-        (dc.df["track_name"] == title) & (dc.df["artist_name"] == artist)
-    ]
+    song_row_full = (
+        dc.df[  # Wyszukiwanie utworu w DataFrame na podstawie tytułu i artysty
+            (dc.df["track_name"] == title) & (dc.df["artist_name"] == artist)
+        ]
+    )
 
-    if song_row_full.empty:
-        print("❌ Nie znaleziono piosenki.")
-        return recommended_songs
+    if song_row_full.empty:  # Sprawdzanie, czy utwór został znaleziony
+        print(
+            "❌ Nie znaleziono piosenki."
+        )  # Wyświetlanie komunikatu o nieznalezieniu utworu
+        return recommended_songs  # Zwracanie pustej listy rekomendacji
 
-    song_features = song_row_full[KNN.features_knn].dropna()
+    song_features = song_row_full[
+        KNN.features_knn
+    ].dropna()  # Pobieranie cech utworu i usuwanie brakujących wartości
 
-    if song_features.empty:
-        print("❌ Piosenka znaleziona, ale brakuje danych w cechach.")
-        return recommended_songs
+    if song_features.empty:  # Sprawdzanie, czy istnieją cechy dla znalezionego utworu
+        print(
+            "❌ Piosenka znaleziona, ale brakuje danych w cechach."
+        )  # Wyświetlanie komunikatu o braku danych w cechach
+        return recommended_songs  # Zwracanie pustej listy rekomendacji
 
-    try:
+    try:  # Rozpoczynanie bloku try-except do obsługi błędów
+        # Ustal k dla modelu KNN. Aby uzyskać 'numberOfSongs' rekomendacji,
+        # poproś model o 'numberOfSongs + 1' sąsiadów,
+        # aby uwzględnić możliwość, że piosenka wejściowa jest jednym z nich.
+        k_for_model = numberOfSongs + 1  # Ustalanie liczby sąsiadów dla modelu KNN
+
+        # Załaduj/pobierz model KNN z określoną wartością k
+        knn_model = KNN.load_knn_model(
+            n_neighbors_param=k_for_model
+        )  # Ładowanie lub pobieranie modelu KNN
+
         # Przekaż dane jako DataFrame, nie numpy array
-        distances, indices = KNN.knn.kneighbors(song_features)
+        distances, indices = knn_model.kneighbors(  # Wyszukiwanie najbliższych sąsiadów
+            song_features
+        )  # Użycie załadowanego modelu knn_model
 
         # Pobierz rekomendowane utwory
-        similar_songs_df = dc.df.iloc[indices[0]]
+        similar_songs_df = dc.df.iloc[
+            indices[0]
+        ]  # Pobieranie danych o podobnych utworach z DataFrame
 
         # Iteruj po znalezionych utworach i dodaj je do listy
-        for index, row in similar_songs_df.iterrows():
+        for (
+            index,
+            row,
+        ) in (
+            similar_songs_df.iterrows()
+        ):  # Iterowanie po znalezionych podobnych utworach
             # Pomiń utwór wejściowy, jeśli jest w rekomendacjach
-            if row["track_name"] == title and row["artist_name"] == artist:
-                continue
-            recommended_songs.append(
+            if (
+                row["track_name"] == title and row["artist_name"] == artist
+            ):  # Sprawdzanie, czy utwór nie jest utworem wejściowym
+                continue  # Pomijanie utworu wejściowego
+            recommended_songs.append(  # Dodawanie utworu do listy rekomendacji
                 {"track_name": row["track_name"], "artist_name": row["artist_name"]}
             )
+            # Dodawanie do ilości rządanej przez użytkownika
+            if (
+                len(recommended_songs) >= numberOfSongs
+            ):  # Sprawdzanie, czy osiągnięto żądaną liczbę rekomendacji
+                break  # Przerywanie pętli, jeśli osiągnięto limit
 
-        print("🔎 Podobne utwory:")
-        for song in recommended_songs:
-            print(f"- {song['track_name']} by {song['artist_name']}")
-        print(f"\n📏 Średni dystans do {KNN.k} sąsiadów: {KNN.avg_distance:.4f}")
+        print("🔎 Podobne utwory:")  # Wyświetlanie nagłówka dla listy podobnych utworów
+        for song in recommended_songs:  # Iterowanie po liście rekomendowanych utworów
+            print(
+                f"- {song['track_name']} by {song['artist_name']}"
+            )  # Wyświetlanie każdego rekomendowanego utworu
+        # Usunięto odwołanie do KNN.k i KNN.avg_distance, ponieważ nie są już globalne
+        # print(f"\n📏 Średni dystans do {KNN.k} sąsiadów: {KNN.avg_distance:.4f}")
 
-    except Exception as e:
-        print(f"Błąd podczas wyszukiwania podobnych utworów: {e}")
+    except Exception as e:  # Obsługiwanie wyjątków
+        print(
+            f"Błąd podczas wyszukiwania podobnych utworów: {e}"
+        )  # Wyświetlanie komunikatu o błędzie
 
-    return recommended_songs
-
-
-if __name__ == "__main__":
-    results = find_similar_songs("Summertime Sadness", "Lana Del Rey")
-    print(f"\nZwrócona lista zawiera {len(results)} utworów")
+    return recommended_songs  # Zwracanie listy rekomendowanych utworów
