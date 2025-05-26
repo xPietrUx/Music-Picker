@@ -2,7 +2,7 @@
 spotify_data.csv
 *.vscode
 data/spotify_data_cleaned.csv
-knn_model.pkl
+*.pkl
 
 
 # Byte-compiled / optimized / DLL files
