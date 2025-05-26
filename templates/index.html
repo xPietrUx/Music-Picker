@@ -30,10 +30,29 @@
         </p>
     </form>
 
-    {% if feedback_message %}
+    {% if feedback_message is defined and feedback_message is not none %}
     <div class="feedback-section">
-        <h2>Odpowiedź serwera:</h2>
-        <p>{{ feedback_message }}</p>
+        <h2>Rekomendowane utwory:</h2>
+        {% if feedback_message %} {# Sprawdź, czy lista nie jest pusta #}
+        <table>
+            <thead>
+                <tr>
+                    <th>Tytuł utworu</th>
+                    <th>Artysta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in feedback_message %}
+                <tr>
+                    <td>{{ song.track_name }}</td>
+                    <td>{{ song.artist_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Nie znaleziono żadnych rekomendacji pasujących do Twojego zapytania.</p>
+        {% endif %}
     </div>
     {% endif %}
 
