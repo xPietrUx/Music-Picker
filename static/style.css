@@ -27,3 +27,37 @@ body {
   margin: 4px 2px;
   cursor: pointer;
 }
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  color: white;
+}
+
+th {
+  font-size: +30px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+th {
+  background-color: #333;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #222;
+}
+
+tr:hover {
+  background-color: #444;
+}
+
+.feedback-section h2 {
+  margin-top: 30px;
+}
