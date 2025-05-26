@@ -3,14 +3,16 @@ import recomender_system.KNN as KNN  # Importowanie modułu KNN
 
 
 def find_similar_songs(
-    title, artist, numberOfSongs
+    title="Starships", artist="Nicki Minaj", numberOfSongs=10
 ):  # Definiowanie funkcji do wyszukiwania podobnych utworów
     print(  # Wyświetlanie informacji o rozpoczęciu wyszukiwania
-        f"Szukam podobnych utworów do: {title} wykonawcy: {artist} (liczba rekomendacji: {numberOfSongs})"
+        f"🔦 Szukam podobnych utworów do: {title} wykonawcy: {artist} (liczba rekomendacji: {numberOfSongs})"
     )
 
     # Lista zwracająca podobne utwory
-    recommended_songs = []  # Inicjalizowanie listy na rekomendowane utwory
+    recommended_songs = []
+    # Średni dystans
+    avg_dist_for_query = None
 
     # Znajdź wiersz w df
     song_row_full = (
@@ -23,7 +25,7 @@ def find_similar_songs(
         print(
             "❌ Nie znaleziono piosenki."
         )  # Wyświetlanie komunikatu o nieznalezieniu utworu
-        return recommended_songs  # Zwracanie pustej listy rekomendacji
+        return recommended_songs, avg_dist_for_query
 
     song_features = song_row_full[
         KNN.features_knn
@@ -33,7 +35,7 @@ def find_similar_songs(
         print(
             "❌ Piosenka znaleziona, ale brakuje danych w cechach."
         )  # Wyświetlanie komunikatu o braku danych w cechach
-        return recommended_songs  # Zwracanie pustej listy rekomendacji
+        return recommended_songs, avg_dist_for_query
 
     try:
         # Ustalanie liczby sąsiadów dla modelu KNN
@@ -88,7 +90,7 @@ def find_similar_songs(
 
     except Exception as e:  # Obsługiwanie wyjątków
         print(
-            f"Błąd podczas wyszukiwania podobnych utworów: {e}"
+            f"⚠️ Błąd podczas wyszukiwania podobnych utworów: {e}"
         )  # Wyświetlanie komunikatu o błędzie
 
-    return recommended_songs  # Zwracanie listy rekomendowanych utworów
+    return recommended_songs, avg_dist_for_query
