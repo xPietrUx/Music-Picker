@@ -1,6 +1,7 @@
 # Ignore .csv
 spotify_data.csv
 *.vscode
+data/spotify_data_cleaned.csv
 
 
 # Byte-compiled / optimized / DLL files
