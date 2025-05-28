@@ -8,8 +8,8 @@ from recomender_system import search_engine
 
 # index.html
 class SongForm(FlaskForm):
-    song = StringField("Utwór", [validators.Length(min=4, max=25)])
-    artist = StringField("Artysta", validators=[validators.Length(min=4, max=25)])
+    song = StringField("Utwór", [validators.Length(min=4)])
+    artist = StringField("Artysta", validators=[validators.Length(min=4)])
     numberOfSongs = IntegerField("Liczba podobnych utworów do wyświetlenia")
 
 
