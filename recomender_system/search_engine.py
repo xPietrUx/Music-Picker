@@ -42,9 +42,7 @@ def find_similar_songs(
         k_for_model = numberOfSongs + 1
 
         # Załaduj/pobierz model KNN z określoną wartością k
-        knn_model = KNN.load_knn_model(
-            n_neighbors_param=k_for_model
-        )  # Ładowanie lub pobieranie modelu KNN
+        knn_model = KNN.load_knn_model(n_neighbors_param=k_for_model)
 
         # Przekaż dane jako DataFrame, nie numpy array
         distances, indices = knn_model.kneighbors(  # Wyszukiwanie najbliższych sąsiadów
@@ -78,19 +76,15 @@ def find_similar_songs(
                 break  # Przerywanie pętli, jeśli osiągnięto limit
 
         print("🔎 Podobne utwory:")  # Wyświetlanie nagłówka dla listy podobnych utworów
-        for song in recommended_songs:  # Iterowanie po liście rekomendowanych utworów
-            print(
-                f"- {song['track_name']} by {song['artist_name']}"
-            )  # Wyświetlanie każdego rekomendowanego utworu
+        for song in recommended_songs:
+            print(f"- {song['track_name']} by {song['artist_name']}")
         if distances.size > 0:
             avg_dist_for_query = distances[0].mean()
             print(
                 f"\n📏 Średni dystans do {numberOfSongs} potencjalnych rekomendacji (przed odfiltrowaniem utworu wejściowego): {avg_dist_for_query:.4f}"
             )
 
-    except Exception as e:  # Obsługiwanie wyjątków
-        print(
-            f"⚠️ Błąd podczas wyszukiwania podobnych utworów: {e}"
-        )  # Wyświetlanie komunikatu o błędzie
+    except Exception as e:
+        print(f"⚠️ Błąd podczas wyszukiwania podobnych utworów: {e}")
 
     return recommended_songs, avg_dist_for_query
